@@ -3,10 +3,35 @@ import Logo from './assets/LogoMatchTransparent2_resizedbanner 1.png';
 import Background from './assets/backgroundmp.png';
 import { Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const formSchema = z.object({
+  email: z
+    .string()
+    .min(0, { message: 'Email é obrigatório' })
+    .email({ message: 'Email inválido' }),
+  password: z
+    .string()
+    .min(8, { message: 'Senha deve ter no mínimo 8 caracteres' }),
+});
 
 export function App() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    console.log(data);
+    navigate('/dashboard');
+  };
 
   return (
     <div className="w-full min-h-screen flex flex-col">
@@ -29,10 +54,7 @@ export function App() {
           <form
             action=""
             className="flex flex-col w-full h-full gap-4 py-8 px-40 items-center justify-center max-md:px-10"
-            onSubmit={(e) => {
-              e.preventDefault();
-              navigate('/dashboard');
-            }}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <h1 className="text-text-primary text-[64px] font-bold">Login</h1>
 
@@ -43,7 +65,11 @@ export function App() {
               <input
                 type="email"
                 className="w-full h-10 rounded-[10px] bg-text-secondary text-background-primary px-3 outline-none"
+                {...register('email')}
               />
+              {errors.email && (
+                <span className="text-red-500">{errors.email.message}</span>
+              )}
             </div>
             <div className="flex flex-col gap-2 w-full">
               <span className="text-text-secondary text-[20px] font-normal">
@@ -53,7 +79,13 @@ export function App() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   className="w-full h-10 rounded-[10px] bg-text-secondary text-background-primary px-3 outline-none"
+                  {...register('password')}
                 />
+                {errors.password && (
+                  <span className="text-red-500">
+                    {errors.password.message}
+                  </span>
+                )}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
