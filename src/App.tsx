@@ -2,9 +2,11 @@ import { useState } from 'react';
 import Logo from './assets/LogoMatchTransparent2_resizedbanner 1.png';
 import Background from './assets/backgroundmp.png';
 import { Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 export function App() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="w-full min-h-screen flex flex-col">
@@ -15,18 +17,22 @@ export function App() {
       </header>
 
       {/* Main Content */}
-      <main className="relative flex-1 overflow-hidden flex items-center justify-center">
+      <main className="relative flex-1 overflow-hidden flex items-center justify-center py-10 px-10">
         <img
           src={Background}
           alt="Background"
           className="absolute inset-0 w-full h-full object-cover blur-[3px] brightness-50 scale-105"
         />
 
-        <div className="relative z-10 w-225 h-150 bg-background-primary rounded-[20px] flex flex-col gap-4 opacity-90 shadow-2xl shadow-black hover:opacity-95 transition-opacity">
+        <div className="relative z-10 w-225 h-150 bg-background-primary rounded-[20px] flex flex-col gap-4 opacity-90 shadow-2xl shadow-black hover:opacity-95 transition-opacity max-md:w-100">
           {/* Login Form */}
           <form
             action=""
-            className="flex flex-col w-full h-full gap-4 py-8 px-40 items-center justify-center"
+            className="flex flex-col w-full h-full gap-4 py-8 px-40 items-center justify-center max-md:px-10"
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigate('/dashboard');
+            }}
           >
             <h1 className="text-text-primary text-[64px] font-bold">Login</h1>
 
@@ -51,7 +57,7 @@ export function App() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-42 top-98 transform -translate-y-1/2 text-text-secondary cursor-pointer"
+                  className="absolute right-42 top-98 transform -translate-y-1/2 text-text-secondary cursor-pointer max-md:right-12"
                 >
                   {showPassword ? (
                     <EyeOff className="text-background-primary" />
