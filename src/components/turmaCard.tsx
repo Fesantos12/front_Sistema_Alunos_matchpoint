@@ -1,16 +1,48 @@
-import { Trash2, Pencil } from 'lucide-react';
+import { Trash2, Pencil, UsersRound } from 'lucide-react';
 
-interface turmaCardProps {}
-export const TurmaCard = ({}: turmaCardProps) => {
+interface turmaCardProps {
+  turmaName: string;
+  turmaDescription: string;
+  turmaStudentsNumber: number;
+}
+
+export const TurmaCard = ({
+  turmaName,
+  turmaDescription,
+  turmaStudentsNumber,
+}: turmaCardProps) => {
   return (
-    <div className="w-100 h-75 bg-background-primary rounded-[20px] opacity-100 shadow-2xl">
-      <div className="flex gap-2 ml-4 mt-4">
-        <button className="w-10 h-10 flex items-center justify-center text-text-primary bg-button-background-secondary rounded-sm cursor-pointer hover:bg-button-background-primary transition-colors">
-          <Pencil />
+    <div className="w-100 h-75 bg-background-primary rounded-[20px] shadow-2xl p-4 flex flex-col">
+      {/* Botões */}
+      <div className="flex justify-end gap-2">
+        <button className="w-8 h-8 flex items-center justify-center text-text-primary bg-button-background-secondary rounded-sm hover:bg-button-background-primary cursor-pointer">
+          <Pencil size={18} />
         </button>
-        <button className="w-10 h-10 flex items-center justify-center text-text-primary bg-button-red rounded-sm cursor-pointer hover:bg-red-800 transition-colors">
-          <Trash2 />
+
+        <button className="w-8 h-8 flex items-center justify-center text-text-primary bg-button-red rounded-sm hover:bg-red-800 cursor-pointer">
+          <Trash2 size={18} />
         </button>
+      </div>
+
+      {/* Conteúdo */}
+      <div className="flex-1 flex flex-col items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-text-secondary">
+            {turmaName}
+          </h2>
+
+          <p className="text-text-secondary font-light">{turmaDescription}</p>
+        </div>
+
+        <div className="flex items-center gap-4 mt-6">
+          <div className="w-17.5 h-17.5 rounded-[10px] bg-background-secondary flex items-center justify-center">
+            <UsersRound size={42} className="text-text-secondary" />
+          </div>
+
+          <span className="text-[40px] font-semibold text-text-secondary">
+            {turmaStudentsNumber}
+          </span>
+        </div>
       </div>
     </div>
   );

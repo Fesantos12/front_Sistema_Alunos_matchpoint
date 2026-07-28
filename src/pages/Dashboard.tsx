@@ -52,11 +52,27 @@ export const Dashboard = () => {
                 Total de alunos: 34
               </span>
             </div>
-            <div className="w-full h-100 bg-text-secondary/20 rounded-3xl shadow-2xl flex items-center justify-center gap-10 flex-wrap">
-              <TurmaCard />
-              <TurmaCard />
-              <TurmaCard />
-              <TurmaCard />
+            <div className="w-full h-100 bg-text-secondary/20 rounded-[20px] shadow-2xl flex items-center justify-center gap-10 flex-wrap">
+              <TurmaCard
+                turmaName="Turma masculino 1"
+                turmaDescription="Quinta-feira das 19h às 20:30h"
+                turmaStudentsNumber={16}
+              />
+              <TurmaCard
+                turmaName="Turma masculino 2"
+                turmaDescription="Sexta-feira das 20:30 às 22h"
+                turmaStudentsNumber={20}
+              />
+              <TurmaCard
+                turmaName="Turma feminino 1"
+                turmaDescription="Terça-feira das 19h às 20:30h"
+                turmaStudentsNumber={18}
+              />
+              <TurmaCard
+                turmaName="Turma feminino 2"
+                turmaDescription="Terça-feira das 20:30h às 22h"
+                turmaStudentsNumber={22}
+              />
             </div>
           </div>
         </div>
