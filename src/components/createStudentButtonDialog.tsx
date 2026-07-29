@@ -21,16 +21,57 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const sexo = [
   { value: 'masculino', label: 'Masculino' },
   { value: 'feminino', label: 'Feminino' },
 ];
 
+const formSchema = z.object({
+  name: z.string().min(1, 'Nome é obrigatório'),
+
+  age: z.string().min(1, 'Idade é obrigatória'),
+
+  sexo: z.string().min(1, 'Selecione o sexo do aluno'),
+
+  number: z
+    .string()
+    .min(1, 'Celular é obrigatório')
+    .regex(/^\(\d{2}\) \d{5}-\d{4}$/, 'Celular inválido'),
+
+  nomeResponsavel: z.string().min(1, 'Nome do responsável é obrigatório'),
+
+  celularResponsavel: z
+    .string()
+    .min(1, 'Celular do responsável é obrigatório')
+    .regex(/^\(\d{2}\) \d{5}-\d{4}$/, 'Celular inválido'),
+
+  endereco: z.string().min(1, 'Endereço é obrigatório'),
+
+  doencas: z.string().optional(),
+
+  restricoes: z.string().optional(),
+});
+
 export const NewUserButtonDialog = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    console.log(data);
+    console.log('Aluno(a) criado com sucesso!');
+  };
+
   return (
     <Dialog>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <DialogTrigger
           render={
             <button className="w-10 h-10 flex items-center justify-center text-text-primary bg-button-background-secondary rounded-sm cursor-pointer hover:bg-cyan-900 transition-colors">
@@ -47,20 +88,30 @@ export const NewUserButtonDialog = () => {
           </DialogHeader>
           <FieldGroup>
             <Field>
-              <Label htmlFor="nameStudent-1">Nome do Aluno(a)</Label>
+              <Label htmlFor="name">Nome do Aluno(a)</Label>
               <Input
-                id="nameStudent-1"
-                name="nameStudent"
+                id="name"
                 defaultValue="Nome do Aluno(a)"
+                {...register('name')}
               />
+              {errors.name && (
+                <span className="text-red-500">{errors.name.message}</span>
+              )}
             </Field>
             <Field>
-              <Label htmlFor="description-1">Idade</Label>
-              <Input type="number" id="age" name="age" defaultValue="Idade" />
+              <Label htmlFor="age">Idade</Label>
+              <Input id="age" {...register('age', { valueAsNumber: true })} />
+              {errors.age && (
+                <span className="text-red-500">{errors.age.message}</span>
+              )}
             </Field>
             <Field>
-              <Label htmlFor="nameStudent-1">Sexo</Label>
-              <Select items={sexo}>
+              <Label htmlFor="sexo">Sexo</Label>
+              <Select
+                items={sexo}
+                onValueChange={(value) => console.log(value)}
+                {...register('sexo')}
+              >
                 <SelectTrigger className="w-45">
                   <SelectValue placeholder="Selecione o sexo" />
                 </SelectTrigger>
@@ -74,52 +125,81 @@ export const NewUserButtonDialog = () => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              {errors.sexo && (
+                <span className="text-red-500">{errors.sexo.message}</span>
+              )}
             </Field>
             <Field>
-              <Label htmlFor="phonenumber">Celular</Label>
+              <Label htmlFor="number">Celular</Label>
               <Input
-                id="phone"
-                name="phone"
+                id="number"
                 defaultValue="ex: (00) 00000-0000"
+                {...register('number')}
               />
+              {errors.number && (
+                <span className="text-red-500">{errors.number.message}</span>
+              )}
             </Field>
             <Field>
-              <Label htmlFor="nome-responsavel">Nome do Responsavel</Label>
+              <Label htmlFor="nomeResponsavel">Nome do Responsavel</Label>
               <Input
-                id="parentName"
-                name="parentName"
+                id="nomeResponsavel"
                 defaultValue="Nome do Responsavel"
+                {...register('nomeResponsavel')}
               />
+              {errors.nomeResponsavel && (
+                <span className="text-red-500">
+                  {errors.nomeResponsavel.message}
+                </span>
+              )}
             </Field>
             <Field>
-              <Label htmlFor="celular-responsavel">
-                Celular do Responsavel
-              </Label>
+              <Label htmlFor="celularResponsavel">Celular do Responsavel</Label>
               <Input
-                id="parentPhone"
-                name="parentPhone"
+                id="celularResponsavel"
                 defaultValue="ex: (00) 00000-0000"
+                {...register('celularResponsavel')}
               />
+              {errors.celularResponsavel && (
+                <span className="text-red-500">
+                  {errors.celularResponsavel.message}
+                </span>
+              )}
             </Field>
             <Field>
-              <Label htmlFor="endereço">Endereço</Label>
-              <Input id="address" name="address" defaultValue="Endereço" />
-            </Field>
-            <Field>
-              <Label htmlFor="doenças">Doenças</Label>
+              <Label htmlFor="endereco">Endereço</Label>
               <Input
-                id="diseases"
-                name="diseases"
+                id="endereco"
+                defaultValue="endereco"
+                {...register('endereco')}
+              />
+              {errors.endereco && (
+                <span className="text-red-500">{errors.endereco.message}</span>
+              )}
+            </Field>
+            <Field>
+              <Label htmlFor="doencas">Doenças</Label>
+              <Input
+                id="doencas"
                 defaultValue="ex: Diabetes, Hipertensão, etc."
+                {...register('doencas')}
               />
+              {errors.doencas && (
+                <span className="text-red-500">{errors.doencas.message}</span>
+              )}
             </Field>
             <Field>
-              <Label htmlFor="restrictions">Restrições</Label>
+              <Label htmlFor="restricoes">Restrições</Label>
               <Input
-                id="restrictions"
-                name="restrictions"
+                id="restricoes"
                 defaultValue="ex: Restrições Alimentares, Alergias, etc."
+                {...register('restricoes')}
               />
+              {errors.restricoes && (
+                <span className="text-red-500">
+                  {errors.restricoes.message}
+                </span>
+              )}
             </Field>
           </FieldGroup>
           <DialogFooter>

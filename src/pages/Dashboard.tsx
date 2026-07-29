@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { LogOut, UserPlus } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import Background from '../assets/backgroundmp.png';
 import logoGrande from '../assets/LogoMatchTransparent2_resizedbanner 1@2x.png';
 import { TurmaCard } from '../components/turmaCard';
