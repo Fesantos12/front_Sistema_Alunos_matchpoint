@@ -1,4 +1,4 @@
-import { Trash2, Pencil, UsersRound } from 'lucide-react';
+import { Trash2, UsersRound } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +10,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { EditClassButtonDialog } from './editClassButtonDialog';
 
 interface turmaCardProps {
   turmaName: string;
@@ -26,9 +27,7 @@ export const TurmaCard = ({
     <div className="w-100 h-75 bg-background-primary rounded-[20px] shadow-2xl p-4 flex flex-col">
       {/* Botões */}
       <div className="flex justify-end gap-2">
-        <button className="w-8 h-8 flex items-center justify-center text-text-primary bg-button-background-secondary rounded-sm hover:bg-button-background-primary cursor-pointer">
-          <Pencil size={18} />
-        </button>
+        <EditClassButtonDialog />
 
         <AlertDialog>
           <AlertDialogTrigger

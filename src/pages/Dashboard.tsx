@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router';
-import { LogOut, UserPlus, FunnelPlus } from 'lucide-react';
+import { LogOut, UserPlus } from 'lucide-react';
 import Background from '../assets/backgroundmp.png';
 import logoGrande from '../assets/LogoMatchTransparent2_resizedbanner 1@2x.png';
 import { TurmaCard } from '../components/turmaCard';
+import { CreateClassButtonDialog } from '../components/createClassButtonDIalog';
+import { NewUserButtonDialog } from '../components/createStudentButtonDialog';
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -19,12 +21,8 @@ export const Dashboard = () => {
         </button>
         <div className="flex items-center gap-4">
           <div className="flex gap-2">
-            <button className="w-10 h-10 flex items-center justify-center text-text-primary bg-button-background-primary rounded-sm cursor-pointer hover:bg-cyan-950 transition-colors">
-              <FunnelPlus />
-            </button>
-            <button className="w-10 h-10 flex items-center justify-center text-text-primary bg-button-background-secondary rounded-sm cursor-pointer hover:bg-cyan-900 transition-colors">
-              <UserPlus />
-            </button>
+            <CreateClassButtonDialog />
+            <NewUserButtonDialog />
           </div>
           <span className="text-text-primary text-2xl font-bold">
             Prof° Fellipe
