@@ -21,9 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { toast } from '@/components/ui/toast';
 
 const sexo = [
   { value: 'masculino', label: 'Masculino' },
@@ -33,7 +35,7 @@ const sexo = [
 const formSchema = z.object({
   name: z.string().min(1, 'Nome é obrigatório'),
 
-  age: z.string().min(1, 'Idade é obrigatória'),
+  age: z.string().min(1, 'Idade deve ser no mínimo 12'),
 
   sexo: z.string().min(1, 'Selecione o sexo do aluno'),
 
@@ -57,21 +59,62 @@ const formSchema = z.object({
 });
 
 export const NewUserButtonDialog = () => {
+  const [open, setOpen] = useState(false);
+
   const {
     register,
     handleSubmit,
+    control,
+    reset,
     formState: { errors },
   } = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      age: '',
+      sexo: '',
+      number: '',
+      nomeResponsavel: '',
+      celularResponsavel: '',
+      endereco: '',
+      doencas: '',
+      restricoes: '',
+    },
   });
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     console.log(data);
     console.log('Aluno(a) criado com sucesso!');
+    if (
+      data.name &&
+      data.age &&
+      data.sexo &&
+      data.number &&
+      data.nomeResponsavel &&
+      data.celularResponsavel &&
+      data.endereco &&
+      data.doencas &&
+      data.restricoes
+    ) {
+      reset();
+      setOpen(false);
+      toast.add({
+        type: 'success',
+        description: 'Aluno Criado com sucesso!',
+      });
+    }
+  };
+  const onError = (errors: unknown) => {
+    console.log('ERROS');
+    console.log(errors);
+    toast.add({
+      type: 'error',
+      description: 'Por favor, preencha todos os campos obrigatórios.',
+    });
   };
 
   return (
-    <Dialog>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <form onSubmit={handleSubmit(onSubmit, onError)} id="new_user_form">
         <DialogTrigger
           render={
             <button className="w-10 h-10 flex items-center justify-center text-text-primary bg-button-background-secondary rounded-sm cursor-pointer hover:bg-cyan-900 transition-colors">
@@ -91,7 +134,7 @@ export const NewUserButtonDialog = () => {
               <Label htmlFor="name">Nome do Aluno(a)</Label>
               <Input
                 id="name"
-                defaultValue="Nome do Aluno(a)"
+                placeholder="Nome do Aluno(a)"
                 {...register('name')}
               />
               {errors.name && (
@@ -100,31 +143,36 @@ export const NewUserButtonDialog = () => {
             </Field>
             <Field>
               <Label htmlFor="age">Idade</Label>
-              <Input id="age" {...register('age', { valueAsNumber: true })} />
+              <Input id="age" {...register('age')} placeholder="ex: 18" />
               {errors.age && (
                 <span className="text-red-500">{errors.age.message}</span>
               )}
             </Field>
             <Field>
               <Label htmlFor="sexo">Sexo</Label>
-              <Select
-                items={sexo}
-                onValueChange={(value) => console.log(value)}
-                {...register('sexo')}
-              >
-                <SelectTrigger className="w-45">
-                  <SelectValue placeholder="Selecione o sexo" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {sexo.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+
+              <Controller
+                name="sexo"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecione o sexo" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectGroup>
+                        {sexo.map((item) => (
+                          <SelectItem key={item.value} value={item.value}>
+                            {item.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
               {errors.sexo && (
                 <span className="text-red-500">{errors.sexo.message}</span>
               )}
@@ -133,7 +181,7 @@ export const NewUserButtonDialog = () => {
               <Label htmlFor="number">Celular</Label>
               <Input
                 id="number"
-                defaultValue="ex: (00) 00000-0000"
+                placeholder="ex: (00) 00000-0000"
                 {...register('number')}
               />
               {errors.number && (
@@ -144,7 +192,7 @@ export const NewUserButtonDialog = () => {
               <Label htmlFor="nomeResponsavel">Nome do Responsavel</Label>
               <Input
                 id="nomeResponsavel"
-                defaultValue="Nome do Responsavel"
+                placeholder="Nome do Responsavel"
                 {...register('nomeResponsavel')}
               />
               {errors.nomeResponsavel && (
@@ -157,7 +205,7 @@ export const NewUserButtonDialog = () => {
               <Label htmlFor="celularResponsavel">Celular do Responsavel</Label>
               <Input
                 id="celularResponsavel"
-                defaultValue="ex: (00) 00000-0000"
+                placeholder="ex: (00) 00000-0000"
                 {...register('celularResponsavel')}
               />
               {errors.celularResponsavel && (
@@ -170,7 +218,7 @@ export const NewUserButtonDialog = () => {
               <Label htmlFor="endereco">Endereço</Label>
               <Input
                 id="endereco"
-                defaultValue="endereco"
+                placeholder="ex: Rua, Número, Bairro"
                 {...register('endereco')}
               />
               {errors.endereco && (
@@ -181,7 +229,7 @@ export const NewUserButtonDialog = () => {
               <Label htmlFor="doencas">Doenças</Label>
               <Input
                 id="doencas"
-                defaultValue="ex: Diabetes, Hipertensão, etc."
+                placeholder="ex: Diabetes, Hipertensão, etc."
                 {...register('doencas')}
               />
               {errors.doencas && (
@@ -192,7 +240,7 @@ export const NewUserButtonDialog = () => {
               <Label htmlFor="restricoes">Restrições</Label>
               <Input
                 id="restricoes"
-                defaultValue="ex: Restrições Alimentares, Alergias, etc."
+                placeholder="ex: Restrições Alimentares, Alergias, etc."
                 {...register('restricoes')}
               />
               {errors.restricoes && (
@@ -205,12 +253,21 @@ export const NewUserButtonDialog = () => {
           <DialogFooter>
             <DialogClose
               render={
-                <Button variant="outline" className="cursor-pointer">
+                <Button
+                  variant="outline"
+                  className="cursor-pointer"
+                  onClick={() => reset()}
+                >
                   Cancelar
                 </Button>
               }
             />
-            <Button type="submit" className="cursor-pointer">
+            <Button
+              type="submit"
+              className="cursor-pointer"
+              form="new_user_form"
+              onClick={() => console.log('clicou')}
+            >
               Criar
             </Button>
           </DialogFooter>
