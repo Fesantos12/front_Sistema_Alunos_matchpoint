@@ -6,6 +6,33 @@ import { TurmaCard } from '../components/turmaCard';
 import { CreateClassButtonDialog } from '../components/createClassButtonDIalog';
 import { NewUserButtonDialog } from '../components/createStudentButtonDialog';
 
+const turmas = [
+  {
+    id: '1',
+    nome: 'Turma Masculino 1',
+    horario: 'Quinta-feira das 19h às 20:30h',
+    alunos: [],
+  },
+  {
+    id: '2',
+    nome: 'Turma Masculino 2',
+    horario: 'Quinta-feira das 20:30h às 22h',
+    alunos: [],
+  },
+  {
+    id: '3',
+    nome: 'Turma Feminino 1',
+    horario: 'Terça-feira das 19h às 20:30h',
+    alunos: [],
+  },
+  {
+    id: '2',
+    nome: 'Turma Feminino 2',
+    horario: 'Terça-feira das 20:30h às 22h',
+    alunos: [],
+  },
+];
+
 export const Dashboard = () => {
   const navigate = useNavigate();
 
@@ -51,26 +78,19 @@ export const Dashboard = () => {
               </span>
             </div>
             <div className="w-full h-100 bg-text-secondary/20 rounded-[20px] shadow-2xl flex items-center justify-center gap-10 flex-wrap">
-              <TurmaCard
-                turmaName="Turma masculino 1"
-                turmaDescription="Quinta-feira das 19h às 20:30h"
-                turmaStudentsNumber={16}
-              />
-              <TurmaCard
-                turmaName="Turma masculino 2"
-                turmaDescription="Sexta-feira das 20:30 às 22h"
-                turmaStudentsNumber={20}
-              />
-              <TurmaCard
-                turmaName="Turma feminino 1"
-                turmaDescription="Terça-feira das 19h às 20:30h"
-                turmaStudentsNumber={18}
-              />
-              <TurmaCard
-                turmaName="Turma feminino 2"
-                turmaDescription="Terça-feira das 20:30h às 22h"
-                turmaStudentsNumber={22}
-              />
+              {turmas.map((turma) => (
+                <div
+                  key={turma.id}
+                  className="cursor-pointer"
+                  onClick={() => navigate(`/dashboard/turma/${turma.id}`)}
+                >
+                  <TurmaCard
+                    turmaName={turma.nome}
+                    turmaDescription={turma.horario}
+                    turmaStudentsNumber={16}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
