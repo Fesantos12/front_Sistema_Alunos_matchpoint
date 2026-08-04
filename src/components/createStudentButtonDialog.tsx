@@ -114,7 +114,11 @@ export const NewUserButtonDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <form onSubmit={handleSubmit(onSubmit, onError)} id="new_user_form">
+      <form
+        onSubmit={handleSubmit(onSubmit, onError)}
+        id="new_user_form"
+        className=""
+      >
         <DialogTrigger
           render={
             <button className="w-10 h-10 flex items-center justify-center text-text-primary bg-button-background-secondary rounded-sm cursor-pointer hover:bg-cyan-900 transition-colors">
@@ -129,7 +133,7 @@ export const NewUserButtonDialog = () => {
               Preencha os dados do novo aluno(a) e clique em salvar.
             </DialogDescription>
           </DialogHeader>
-          <FieldGroup>
+          <FieldGroup className="grid grid-cols-1 gap-4 py-4">
             <Field>
               <Label htmlFor="name">Nome do Aluno(a)</Label>
               <Input
